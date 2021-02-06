@@ -3,11 +3,11 @@ using namespace std;
 
 //#define double float
 
-struct HZNN {
+struct HZNN_old {
 	static const int N=10000, LAY=8;
 
 	struct wdata {
-		double w,s;
+		double w,s; //,x;
 
 		inline void init_rand(){
 			w = ( rand() % 2001 - 1000 ) / 5000.0;
@@ -15,12 +15,15 @@ struct HZNN {
 		}
 
 		inline void init_0(){
-			w = s = 0;
+			w = s = 0; //x = 0;
 		}
 
 		inline void grad(double dx){
 			s += dx * dx;
+			//s *= 0.009;
 			w -= dx / sqrt(s + 0.5) * 0.05;
+			//x = x * 0.99 - dx / sqrt(s + 0.5) * 0.0005;
+			//w += x;
 		}
 	};
 

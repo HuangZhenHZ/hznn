@@ -1,16 +1,19 @@
 #include <bits/stdc++.h>
-#include "hznn_old.cpp"
+//#include "hznn_old.cpp"
+#include "hznn.h"
 
-HZNN nn;
+hznn nn;
 
 void init_nn(){
-	const int sz[3]={28*28,200,10};
-	nn.init(3,sz);
+	//const int sz[3]={28*28,200,10};
+	//nn.init(3,sz);
+	nn.init(28*28,100,10,50);
 }
 
 const int N=60000, in_sz=28*28, out_sz=10;
 double in[N][in_sz], out[N][out_sz];
 unsigned char corlab[N];
+
 
 void read_in(){
 	FILE *file = fopen("train-images-idx3-ubyte","rb");
@@ -70,7 +73,7 @@ void train(){
 
 		cnt += (lab==corlab[i]);
 
-		nn.back(out[i]);
+		nn.bp(out[i]);
 
 		if (i%10000==0){
 			printf("i=%d\n",i);
@@ -91,7 +94,8 @@ int main(){
 	}
 	*/
 
-	for(int i=0; i<5; ++i){
+	for(int t=0; t<50; ++t){
+		printf("t=%d\n",t);
 		train();
 	}
 	return 0;
