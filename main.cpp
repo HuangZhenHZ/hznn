@@ -1,19 +1,18 @@
 #include <bits/stdc++.h>
-//#include "hznn_old.cpp"
+#include "hznn_old.cpp"
 #include "hznn.h"
 
-hznn nn;
+HZNN_old nn;
 
 void init_nn(){
-	//const int sz[3]={28*28,200,10};
-	//nn.init(3,sz);
-	nn.init(28*28,100,10,50);
+	const int sz[3]={28*28,500,10};
+	nn.init(3,sz);
+	//nn.init(28*28,500,10,500);
 }
 
 const int N=60000, in_sz=28*28, out_sz=10;
 double in[N][in_sz], out[N][out_sz];
 unsigned char corlab[N];
-
 
 void read_in(){
 	FILE *file = fopen("train-images-idx3-ubyte","rb");
@@ -60,8 +59,11 @@ void train(){
 	double fout[out_sz];
 	int cnt=0;
 
-	for(int i=1; i<N; ++i){
-		nn.calc(in[i]);
+	double sum=0, num=0;
+
+	for(int i=0; i<N; ++i){
+		sum += nn.calc(in[i]);
+		num += 1;
 		nn.get_output(fout);
 
 		int lab=0;
@@ -75,8 +77,9 @@ void train(){
 
 		nn.bp(out[i]);
 
-		if (i%10000==0){
-			printf("i=%d\n",i);
+		if (i%5000==0){
+			printf("i=%d sum/num=%lf\n",i,sum/num);
+			sum=0; num=0;
 		}
 	}
 
@@ -94,7 +97,7 @@ int main(){
 	}
 	*/
 
-	for(int t=0; t<50; ++t){
+	for(int t=0; t<20; ++t){
 		printf("t=%d\n",t);
 		train();
 	}

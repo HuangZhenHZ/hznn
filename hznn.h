@@ -4,7 +4,7 @@ struct hznn {
 
 	struct wdata {
 		double w,s;
-		//inline void init(int w);
+		inline void init_rand();
 		inline void grad(double dx);
 	};
 
@@ -19,7 +19,7 @@ struct hznn {
 	double in1[N], in2[N], fout[N], d[N];
 	int sta[N], top;
 
-	void calc(const double f[]);
+	int calc(const double f[]);
 	void get_output(double f[]);
 	void bp(const double f[]);
 };

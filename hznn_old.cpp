@@ -97,8 +97,10 @@ struct HZNN_old {
 
 	double fin[N],fout[N],d[N];
 
-	void calc(const double f[]){
+	int calc(const double f[]){
 		memcpy(fin,f,sizeof(double)*sz[0]);
+
+		int sum = 0;
 
 		for(int i=0; i<lay-1; ++i){
 
@@ -112,6 +114,7 @@ struct HZNN_old {
 
 			for(int j=st[i]; j<st[i+1]; ++j)
 			if (fin[j]>0){
+				if (i) sum++;
 				for(int k=0; k<sz[i+1]; ++k){
 					fin[st[i+1]+k] += fout[j] * w[j][k].w;
 				}
@@ -121,6 +124,8 @@ struct HZNN_old {
 		for(int i=st[lay-1]; i<n; ++i){
 			fout[i] = 1.0 / ( 1.0 + exp(-fin[i]) );
 		}
+
+		return sum;
 	}
 
 	void get_output(double f[]){
@@ -130,7 +135,7 @@ struct HZNN_old {
 	int s1[N],s2[N],t1,t2;
 	double mx = 0;
 
-	void back(const double f[]){
+	void bp(const double f[]){
 		for(int i=0; i<sz[lay-1]; ++i){
 			d[st[lay-1]+i] = fout[st[lay-1]+i] - f[i];
 		}
