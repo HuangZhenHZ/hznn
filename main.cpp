@@ -97,7 +97,7 @@ int main(){
 	}
 	*/
 
-	for(int t=0; t<20; ++t){
+	for(int t=0; t<1; ++t){
 		printf("t=%d\n",t);
 		train();
 	}

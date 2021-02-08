@@ -13,8 +13,16 @@ inline void hznn::wdata::grad(double dx){
 
 void hznn::init(int _in, int _mid, int _out, int _pre){
 	in=_in; mid=_mid; out=_out; pre=_pre;
+	int sum=0;
+	for(int i = in; i < in+mid+out; ++i)
+		sum += i;
+
+	wdata *pool = new wdata[sum];
+
 	for(int i = in; i < in+mid+out; ++i){
-		w[i] = new wdata[i];
+		//w[i] = new wdata[i];
+		w[i] = pool;
+		pool += i;
 		//memset(w[i], 0, sizeof(wdata)*i);
 		//c1[i] = c2[i] = (wdata){double(0.001),double(0)};
 		for(int j=0; j<i; ++j) w[i][j].init_rand();
@@ -31,7 +39,7 @@ int hznn::calc(const double f[]){
 			sta[top++] = i;
 
 	int in_top = top;
-
+/*
 	for(int i=in; i<in+pre; ++i){
 		in1[i] = c1[i].w;
 		for(int k=0; k<top && sta[k]<in; ++k)
@@ -40,8 +48,23 @@ int hznn::calc(const double f[]){
 		fout[i] = in1[i]>0 ? in1[i] : 0;
 		if (in1[i]>0) sta[top++] = i;
 	}
+*/
+	for(int i=in; i<in+pre; ++i) in1[i] = c1[i].w;
+
+	for(int k=0; k<top && sta[k]<in; ++k){
+		int sk = sta[k];
+		for(int i=in; i<in+pre; ++i)
+			in1[i] += fout[sk] * w[i][sk].w;
+	}
+
+	for(int i=in; i<in+pre; ++i){
+		fout[i] = in1[i]>0 ? in1[i] : 0;
+		if (in1[i]>0) sta[top++] = i;
+	}
 
 	for(int i=in+pre; i<in+mid; ++i){
+		assert(false);
+
 		in1[i] = c1[i].w;
 		int k = top-1;
 		while (k>=0 && sta[k]>=i-pre){
@@ -91,7 +114,8 @@ void hznn::get_output(double f[]){
 }
 
 void hznn::bp(const double f[]){
-	for(int i=0; i<in+mid; ++i) d[i]=0;
+	//for(int i=0; i<in+mid; ++i) d[i]=0;
+	for(int k=0; k<top; ++k) d[sta[k]]=0;
 
 	for(int i=in+mid; i<in+mid+out; ++i){
 		d[i] = fout[i] - f[i-(in+mid)];
@@ -105,6 +129,8 @@ void hznn::bp(const double f[]){
 	}
 
 	while (top && sta[top-1]>=in+pre){
+		assert(false);
+
 		int i=sta[--top];
 		c1[i].grad(d[i] * in2[i]);
 		c2[i].grad(d[i] * in1[i]);
