@@ -85,14 +85,16 @@ void hznn2::MAT::bp(){
 	double *ld = l->d;
 
 	for(int i=0; i<r_n; ++i)
-	if (ri[i] > 0){
+	if (rd[i]){
 		sta[top++] = i;
 		c[i].grad(rd[i]);
 	}
 
 	for(int i=0; i<l_n; ++i)
-	if (lo[i] > 0){
 		ld[i]=0;
+
+	for(int i=0; i<l_n; ++i)
+	if (lo[i] > 0){
 		for(int k=0; k<top; ++k){
 			int j=sta[k];
 			ld[i] += rd[j] * w[i][j].w;

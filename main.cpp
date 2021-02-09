@@ -1,6 +1,6 @@
 #include <bits/stdc++.h>
-#include "hznn_old.cpp"
-#include "hznn.h"
+//#include "hznn_old.cpp"
+//#include "hznn.h"
 #include "hznn2.h"
 
 hznn2 nn;
