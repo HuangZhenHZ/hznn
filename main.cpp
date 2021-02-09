@@ -1,8 +1,9 @@
 #include <bits/stdc++.h>
 #include "hznn_old.cpp"
 #include "hznn.h"
+#include "hznn2.h"
 
-HZNN_old nn;
+hznn2 nn;
 
 void init_nn(){
 	const int sz[3]={28*28,500,10};
