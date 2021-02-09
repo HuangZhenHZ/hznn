@@ -6,7 +6,7 @@
 hznn2 nn;
 
 void init_nn(){
-	const int sz[3]={28*28,500,10};
+	const int sz[3]={28*28,100,10};
 	nn.init(3,sz);
 	//nn.init(28*28,500,10,500);
 }
@@ -60,10 +60,12 @@ void train(){
 	double fout[out_sz];
 	int cnt=0;
 
-	double sum=0, num=0;
+	double sum=0, pre=0, num=0;
 
 	for(int i=0; i<N; ++i){
-		sum += nn.calc(in[i]);
+		std::pair<int,int> p = nn.calc(in[i]);
+		sum += p.first;
+		pre += p.second;
 		num += 1;
 		nn.get_output(fout);
 
@@ -79,8 +81,9 @@ void train(){
 		nn.bp(out[i]);
 
 		if (i%5000==0){
+			//printf("i=%d sum/num=%lf sum/pre=%lf\n",i,sum/num,sum/pre);
 			printf("i=%d sum/num=%lf\n",i,sum/num);
-			sum=0; num=0;
+			sum=0; num=0; pre=0;
 		}
 	}
 
@@ -98,7 +101,7 @@ int main(){
 	}
 	*/
 
-	for(int t=0; t<1; ++t){
+	for(int t=0; t<20; ++t){
 		printf("t=%d\n",t);
 		train();
 	}
